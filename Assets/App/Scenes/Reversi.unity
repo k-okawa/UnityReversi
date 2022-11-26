@@ -756,6 +756,7 @@ MonoBehaviour:
     TypeName: 
   autoRun: 1
   autoInjectGameObjects: []
+  _reversiBoard: {fileID: 886252762}
 --- !u!4 &150494136
 Transform:
   m_ObjectHideFlags: 0
@@ -2811,6 +2812,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98eddcded2f6019468a66885ac677f0d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _cellRoot: {fileID: 1902037044}
 --- !u!1001 &901175631
 PrefabInstance:
   m_ObjectHideFlags: 0
