@@ -40,6 +40,23 @@
     "com.unity.modules.video": "1.0.0",
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
-    "com.unity.modules.xr": "1.0.0"
-  }
+    "com.unity.modules.xr": "1.0.0",
+    "com.cysharp.unitask": "2.3.3",
+    "com.neuecc.unirx": "7.1.0",
+    "jp.hadashikick.vcontainer": "1.12.0",
+    "com.cysharp.messagepipe": "1.7.4"
+  },
+  "scopedRegistries": [
+    {
+      "name": "package.openupm.com",
+      "url": "https://package.openupm.com",
+      "scopes": [
+        "com.cysharp.messagepipe",
+        "com.cysharp.unitask",
+        "com.neuecc.unirx",
+        "com.openupm",
+        "jp.hadashikick.vcontainer"
+      ]
+    }
+  ]
 }
