@@ -31,6 +31,7 @@ MonoBehaviour:
     m_Url: https://package.openupm.com
     m_Scopes:
     - com.cysharp.messagepipe
+    - com.cysharp.messagepipe.vcontainer
     - com.cysharp.unitask
     - com.neuecc.unirx
     - com.openupm
