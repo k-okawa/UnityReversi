@@ -11,6 +11,8 @@ namespace App.Reversi
         [Inject] private ReversiService _reversiService;
         [Inject] private ReversiBoard _reversiBoard;
 
+        private CellState _currentTurnState = CellState.Black;
+
         public void Tick()
         {
             if (Input.GetMouseButtonDown(0))
@@ -23,7 +25,20 @@ namespace App.Reversi
                     {
                         if (_reversiBoard.cells[row,col].collider.Raycast(ray, out _, Single.PositiveInfinity))
                         {
-                            _reversiService.SetCellState(row, col, CellState.Black);
+                            if (_reversiService.CanPutStone(row, col, _currentTurnState))
+                            {
+                                _reversiService.PutStone(row, col, _currentTurnState);
+                                switch (_currentTurnState)
+                                {
+                                    case CellState.Black:
+                                        _currentTurnState = CellState.White;
+                                        break;
+                                    case CellState.White:
+                                        _currentTurnState = CellState.Black;
+                                        break;
+                                }
+                            }
+
                             breakFlag = true;
                             break;
                         }

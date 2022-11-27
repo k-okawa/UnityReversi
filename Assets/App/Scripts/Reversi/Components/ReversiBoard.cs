@@ -24,5 +24,10 @@ namespace App.Reversi
             var cell = cells[row, col];
             cell.PutStone(cellState);
         }
+
+        public void ReverseStone(int row, int col, CellState cellState)
+        {
+            cells[row, col].stone.Set(cellState);
+        }
     }
 }

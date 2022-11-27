@@ -1,4 +1,6 @@
-﻿namespace App.Reversi
+﻿using UnityEngine;
+
+namespace App.Reversi
 {
     public enum CellState
     {

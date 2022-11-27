@@ -13,13 +13,20 @@ namespace App.Reversi
 
         void IStartable.Start()
         {
-            _stonePutSubscriber.Subscribe(OnPutStone).AddTo(_reversiBoard.GetCancellationTokenOnDestroy());
+            _stonePutSubscriber.Subscribe(OnCellChanged).AddTo(_reversiBoard.GetCancellationTokenOnDestroy());
             _reversiService.ResetBoard();
         }
 
-        private void OnPutStone(CellStateParams param)
+        private void OnCellChanged(CellStateParams param)
         {
-            _reversiBoard.PutStone(param.row, param.col, param.cellState);
+            if (param.isPut)
+            {
+                _reversiBoard.PutStone(param.row, param.col, param.cellState);
+            }
+            else
+            {
+                _reversiBoard.ReverseStone(param.row, param.col, param.cellState);
+            }
         }
     }
 }
