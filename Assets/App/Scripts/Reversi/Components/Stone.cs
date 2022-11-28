@@ -8,6 +8,9 @@ namespace App.Reversi
         {
             switch (state)
             {
+                case CellState.None:
+                    gameObject.SetActive(false);
+                    break;
                 case CellState.Black:
                     transform.rotation = Quaternion.Euler(0, 0, 0);
                     break;

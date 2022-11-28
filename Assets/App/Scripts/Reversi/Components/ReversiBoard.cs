@@ -13,9 +13,7 @@ namespace App.Reversi
             var cellObjects = _cellRoot.GetComponentsInChildren<Cell>();
             foreach (var cell in cellObjects)
             {
-                int row = int.Parse(cell.name.Substring(4, 1));
-                int col = int.Parse(cell.name.Substring(5, 1));
-                cells[row, col] = cell;
+                cells[cell.row, cell.col] = cell;
             }
         }
 

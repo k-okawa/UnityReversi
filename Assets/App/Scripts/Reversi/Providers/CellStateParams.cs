@@ -1,4 +1,5 @@
 ﻿using System;
+using VContainer;
 
 namespace App.Reversi
 {
@@ -9,6 +10,7 @@ namespace App.Reversi
         public int col { get; }
         public CellState cellState { get; }
 
+        [Inject]
         public CellStateParams(bool isPut, int row, int col, CellState cellState)
         {
             this.isPut = isPut;

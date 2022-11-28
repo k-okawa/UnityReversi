@@ -19,7 +19,8 @@ namespace App.Reversi
             // Provider
             var options = builder.RegisterMessagePipe();
             builder.RegisterMessageBroker<CellStateParams>(options);
-            builder.RegisterEntryPoint<StonePutInputProvider>();
+            builder.RegisterMessageBroker<BoardInputParams>(options);
+            builder.RegisterEntryPoint<BoardInputProvider>();
         }
     }
 }
