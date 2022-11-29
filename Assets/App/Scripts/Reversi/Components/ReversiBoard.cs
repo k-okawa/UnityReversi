@@ -6,20 +6,20 @@ namespace App.Reversi
     {
         [SerializeField] private Transform _cellRoot;
 
-        public Cell[,] cells { get; } = new Cell[8, 8];
+        private Cell[,] _cells { get; } = new Cell[8, 8];
 
         void Awake()
         {
             var cellObjects = _cellRoot.GetComponentsInChildren<Cell>();
             foreach (var cell in cellObjects)
             {
-                cells[cell.row, cell.col] = cell;
+                _cells[cell.row, cell.col] = cell;
             }
         }
 
         public void ResetBoard()
         {
-            foreach (var cell in cells)
+            foreach (var cell in _cells)
             {
                 cell.RemoveStone();
             }
@@ -27,13 +27,19 @@ namespace App.Reversi
 
         public void PutStone(int row, int col, CellState cellState)
         {
-            var cell = cells[row, col];
+            var cell = _cells[row, col];
             cell.PutStone(cellState);
+        }
+        
+        public void RemoveStone(int row, int col)
+        {
+            var cell = _cells[row, col];
+            cell.RemoveStone();
         }
 
         public void ReverseStone(int row, int col, CellState cellState)
         {
-            cells[row, col].stone.Set(cellState);
+            _cells[row, col].stone.Set(cellState);
         }
     }
 }

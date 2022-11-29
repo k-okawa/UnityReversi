@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using MessagePipe;
-using UniRx;
 using UnityEngine;
 using VContainer;
 
@@ -10,19 +9,7 @@ namespace App.Reversi
     {
        [Inject] private BoardModel _boardModel;
        [Inject] private IPublisher<CellStateParams> _cellStatePublisher;
-
-       public IReadOnlyReactiveProperty<int> turnCount => _turnCount;
-       public IReadOnlyReactiveProperty<int> blackStoneCount => _blackStoneCount;
-       public IReadOnlyReactiveProperty<int> whiteStoneCount => _whiteStoneCount;
-       public IReadOnlyReactiveProperty<bool> isGameOver => _isGameOver;
-       public IReadOnlyReactiveProperty<CellState> currentTurnState => _currentTurnState;
-
-       private IntReactiveProperty _turnCount { get; } = new();
-       private IntReactiveProperty _blackStoneCount { get; } = new();
-       private IntReactiveProperty _whiteStoneCount { get; } = new();
-       private BoolReactiveProperty _isGameOver { get; } = new();
-       private ReactiveProperty<CellState> _currentTurnState { get; } = new();
-
+       
        public void ResetBoard()
         {
             for (int row = 0; row < BoardModel.RowCount; row++)
@@ -33,40 +20,20 @@ namespace App.Reversi
                 }
             }
 
-            _turnCount.Value = 0;
-            _blackStoneCount.Value = 0;
-            _whiteStoneCount.Value = 0;
-            _isGameOver.Value = false;
-            _currentTurnState.Value = CellState.Black;
+            _boardModel.turnCount = 0;
+            _boardModel.isGameOver = false;
+            _boardModel.currentTurnState = CellState.Black;
 
-            SetCellState(3, 3, CellState.Black, true);
-            SetCellState(3, 4, CellState.White, true);
-            SetCellState(4, 3, CellState.White, true);
-            SetCellState(4, 4, CellState.Black, true);
+            SetCellState(3, 3, CellState.Black, StoneAction.Put);
+            SetCellState(3, 4, CellState.White, StoneAction.Put);
+            SetCellState(4, 3, CellState.White, StoneAction.Put);
+            SetCellState(4, 4, CellState.Black, StoneAction.Put);
         }
 
-        private void SetCellState(int row, int col, CellState cellState, bool isPut)
+       private void SetCellState(int row, int col, CellState cellState, StoneAction stoneAction)
         {
-            if (cellState == CellState.Black && _boardModel.cells[row, col] != CellState.Black)
-            {
-                _blackStoneCount.Value++;
-                if (_boardModel.cells[row, col] != CellState.None)
-                {
-                    _whiteStoneCount.Value--;
-                }
-            }
-
-            if (cellState == CellState.White && _boardModel.cells[row, col] != CellState.White)
-            {
-                _whiteStoneCount.Value++;
-                if (_boardModel.cells[row, col] != CellState.None)
-                {
-                    _blackStoneCount.Value--;
-                }
-            }
-            
             _boardModel.cells[row, col] = cellState;
-            _cellStatePublisher?.Publish(new CellStateParams(isPut, row, col, cellState));
+            _cellStatePublisher?.Publish(new CellStateParams(stoneAction, row, col, cellState));
         }
 
         public CellState GetCellState(int row, int col)
@@ -81,23 +48,23 @@ namespace App.Reversi
 
         public void PutStone(int row, int col)
         {
-            if (isGameOver.Value)
+            if (_boardModel.isGameOver)
             {
                 Debug.LogWarning($"The game is already over");
                 return;
             }
-            var directions = GetReversibleDirections(row, col, _currentTurnState.Value);
+            var directions = GetReversibleDirections(row, col, _boardModel.currentTurnState);
             if (directions.Count <= 0)
             {
-                Debug.Log($"Can't put stone. State:{_currentTurnState} row:{row} col:{col}");
+                Debug.Log($"Can't put stone. State:{_boardModel.currentTurnState} row:{row} col:{col}");
                 return;
             }
             
-            _turnCount.Value++;
-            SetCellState(row, col, _currentTurnState.Value, true);
+            _boardModel.turnCount++;
+            SetCellState(row, col, _boardModel.currentTurnState, StoneAction.Put);
             foreach (var dir in directions)
             {
-                ReverseRecursively(row, col, dir, _currentTurnState.Value);
+                ReverseRecursively(row, col, dir, _boardModel.currentTurnState);
             }
 
             CheckGameState();
@@ -105,14 +72,14 @@ namespace App.Reversi
 
         private void CheckGameState()
         {
-            if (turnCount.Value >= BoardModel.RowCount * BoardModel.ColCount)
+            if (_boardModel.turnCount >= BoardModel.RowCount * BoardModel.ColCount)
             {
-                _isGameOver.Value = false;
+                _boardModel.isGameOver = false;
                 return;
             }
 
-            CellState nextState = _currentTurnState.Value;
-            switch (_currentTurnState.Value)
+            CellState nextState = _boardModel.currentTurnState;
+            switch (_boardModel.currentTurnState)
             {
                 case CellState.Black:
                     nextState = CellState.White;
@@ -124,13 +91,13 @@ namespace App.Reversi
 
             if (GetPossibleToPutPositions(nextState).Count > 0)
             {
-                _currentTurnState.Value = nextState;
+                _boardModel.currentTurnState = nextState;
                 return;
             }
 
-            if (GetPossibleToPutPositions(_currentTurnState.Value).Count <= 0)
+            if (GetPossibleToPutPositions(_boardModel.currentTurnState).Count <= 0)
             {
-                _isGameOver.Value = true;
+                _boardModel.isGameOver = true;
             }
         }
 
@@ -229,7 +196,7 @@ namespace App.Reversi
                 return;
             }
             
-            SetCellState(row, col, setState, false);
+            SetCellState(row, col, setState, StoneAction.Reverse);
             ReverseRecursively(row, col, direction, setState);
         }
     }
