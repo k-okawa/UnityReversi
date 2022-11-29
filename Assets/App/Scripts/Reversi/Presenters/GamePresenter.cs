@@ -1,5 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using MessagePipe;
+using UniRx;
 using VContainer;
 using VContainer.Unity;
 
@@ -11,11 +12,29 @@ namespace App.Reversi
         [Inject] private ISubscriber<CellStateParams> _stonePutSubscriber;
         [Inject] private ISubscriber<BoardInputParams> _boardInputSubscriber;
         [Inject] private ReversiBoard _reversiBoard;
+        [Inject] private UiManager _uiManager;
 
         void IStartable.Start()
         {
             _stonePutSubscriber.Subscribe(OnCellChanged).AddTo(_reversiBoard.GetCancellationTokenOnDestroy());
             _boardInputSubscriber.Subscribe(OnPutStone);
+            _reversiService.currentTurnState.Subscribe(_uiManager.SetCurrentTurnText).AddTo(_uiManager);
+            _reversiService.isGameOver.Subscribe(isOver =>
+            {
+                if (isOver)
+                {
+                    _uiManager.SetResultText(_reversiService.blackStoneCount.Value, _reversiService.whiteStoneCount.Value);
+                }
+                else
+                {
+                    _uiManager.UnsetResultText();
+                }
+            }).AddTo(_uiManager);
+            _uiManager.resetButton.onClick.AddListener(() =>
+            {
+                _reversiBoard.ResetBoard();
+                _reversiService.ResetBoard();
+            });
             _reversiService.ResetBoard();
         }
 

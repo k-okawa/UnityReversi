@@ -26,12 +26,21 @@ namespace App.Reversi
             if (stone != null)
             {
                 stone.gameObject.SetActive(true);
+                stone.Set(cellState);
                 return;
             }
 
             var go = Instantiate(_stonePrefab, this.transform);
             stone = go.GetComponent<Stone>();
             stone.Set(cellState);
+        }
+
+        public void RemoveStone()
+        {
+            if (stone != null)
+            {
+                stone.gameObject.SetActive(false);
+            }
         }
     }
 }

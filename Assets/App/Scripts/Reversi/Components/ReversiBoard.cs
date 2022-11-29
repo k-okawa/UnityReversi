@@ -17,6 +17,14 @@ namespace App.Reversi
             }
         }
 
+        public void ResetBoard()
+        {
+            foreach (var cell in cells)
+            {
+                cell.RemoveStone();
+            }
+        }
+
         public void PutStone(int row, int col, CellState cellState)
         {
             var cell = cells[row, col];

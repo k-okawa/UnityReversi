@@ -8,10 +8,12 @@ namespace App.Reversi
     public class GameLifetimeScope : LifetimeScope
     {
         [SerializeField] private ReversiBoard _reversiBoard;
+        [SerializeField] private UiManager _uiManager;
         
         protected override void Configure(IContainerBuilder builder)
         {
             builder.RegisterComponent(_reversiBoard);
+            builder.RegisterComponent(_uiManager);
             builder.Register<BoardModel>(Lifetime.Singleton);
             builder.Register<ReversiService>(Lifetime.Singleton);
             builder.RegisterEntryPoint<GamePresenter>();
