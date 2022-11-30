@@ -14,7 +14,6 @@ namespace App.Reversi
         {
             builder.RegisterComponent(_reversiBoard);
             builder.RegisterComponent(_uiManager);
-            builder.Register<BoardModel>(Lifetime.Singleton);
             builder.Register<ReversiService>(Lifetime.Singleton);
             builder.RegisterEntryPoint<GamePresenter>();
             

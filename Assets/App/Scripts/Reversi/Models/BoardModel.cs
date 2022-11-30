@@ -32,5 +32,10 @@ namespace App.Reversi
 
             return ret;
         }
+
+        public BoardModel Clone()
+        {
+            return MemberwiseClone() as BoardModel;
+        }
     }
 }

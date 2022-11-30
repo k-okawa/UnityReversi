@@ -7,7 +7,6 @@ namespace App.Reversi
 {
     public class GamePresenter : IStartable
     {
-        [Inject] private BoardModel _boardModel;
         [Inject] private ReversiService _reversiService;
         [Inject] private ISubscriber<CellStateParams> _stonePutSubscriber;
         [Inject] private ISubscriber<BoardInputParams> _boardInputSubscriber;
@@ -42,10 +41,10 @@ namespace App.Reversi
         private void OnPutStone(BoardInputParams param)
         {
             _reversiService.PutStone(param.row, param.col);
-            _uiManager.SetCurrentTurnText(_boardModel.currentTurnState);
-            if (_boardModel.isGameOver)
+            _uiManager.SetCurrentTurnText(_reversiService.currentTurnState);
+            if (_reversiService.isGameOver)
             {
-                _uiManager.SetResultText(_boardModel.GetBlackStoneCount(), _boardModel.GetWhiteStoneCount());
+                _uiManager.SetResultText(_reversiService.blackStoneCount, _reversiService.whiteStoneCount);
             }
         }
 
@@ -53,13 +52,15 @@ namespace App.Reversi
         {
             _reversiBoard.ResetBoard();
             _reversiService.ResetBoard();
-            _uiManager.SetCurrentTurnText(_boardModel.currentTurnState);
+            _uiManager.SetCurrentTurnText(_reversiService.currentTurnState);
             _uiManager.UnsetResultText();
         }
 
         private void OnUndo()
         {
-
+            _reversiService.Undo();
+            _uiManager.SetCurrentTurnText(_reversiService.currentTurnState);
+            _uiManager.UnsetResultText();
         }
     }
 }
