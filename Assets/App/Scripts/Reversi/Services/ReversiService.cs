@@ -12,7 +12,8 @@ namespace App.Reversi
         [Inject] private IPublisher<CellStateParams> _cellStatePublisher;
 
         private BoardModel _boardModel;
-        private Stack<BoardHistoryModel> _boardHistoryModels = new();
+        private Stack<BoardHistoryModel> _boardUndoHistoryModels = new();
+        private Stack<BoardHistoryModel> _boardRedoHistoryModels = new();
 
         public int turnCount => _boardModel.turnCount;
         public int blackStoneCount => _boardModel.GetBlackStoneCount();
@@ -32,8 +33,9 @@ namespace App.Reversi
             SetCellState(4, 3, CellState.White, StoneAction.Put);
             SetCellState(4, 4, CellState.Black, StoneAction.Put);
 
-            _boardHistoryModels.Clear();
-            _boardHistoryModels.Push(new BoardHistoryModel(_boardModel.Clone(), Array.Empty<CellStateHistoryModel>()));
+            _boardUndoHistoryModels.Clear();
+            _boardRedoHistoryModels.Clear();
+            _boardUndoHistoryModels.Push(new BoardHistoryModel(_boardModel.Clone(), _boardModel.Clone(),Array.Empty<CellStateHistoryModel>()));
         }
 
         private void SetCellState(int row, int col, CellState cellState, StoneAction stoneAction)
@@ -63,7 +65,7 @@ namespace App.Reversi
             }
 
             List<CellStateHistoryModel> cellStateHistoryModels = new List<CellStateHistoryModel>();
-            var clonedBoardModel = _boardModel.Clone();
+            var prevBoardModel = _boardModel.Clone();
 
             _boardModel.turnCount++;
             SetCellState(row, col, _boardModel.currentTurnState, StoneAction.Put);
@@ -82,19 +84,20 @@ namespace App.Reversi
 
             CheckGameState();
 
-            _boardHistoryModels.Push(new BoardHistoryModel(clonedBoardModel, cellStateHistoryModels.ToArray()));
+            _boardUndoHistoryModels.Push(new BoardHistoryModel(prevBoardModel, _boardModel.Clone(), cellStateHistoryModels.ToArray()));
+            _boardRedoHistoryModels.Clear();
         }
 
         public void Undo()
         {
-            if (_boardHistoryModels.Count <= 1)
+            if (_boardUndoHistoryModels.Count <= 1)
             {
                 Debug.Log("Can't undo");
                 return;
             }
 
-            var boardHistory = _boardHistoryModels.Pop();
-            var reversedHistories = boardHistory.history.Reverse();
+            var boardHistory = _boardUndoHistoryModels.Pop();
+            var reversedHistories = boardHistory.histories.Reverse();
             foreach (var history in reversedHistories)
             {
                 switch (history.stoneAction)
@@ -108,7 +111,25 @@ namespace App.Reversi
                 }
             }
 
-            _boardModel = boardHistory.boardModel;
+            _boardModel = boardHistory.prevBoardModel;
+            _boardRedoHistoryModels.Push(boardHistory);
+        }
+
+        public void Redo()
+        {
+            if (!_boardRedoHistoryModels.TryPop(out BoardHistoryModel boardHistory))
+            {
+                Debug.Log("Can't redo");
+                return;
+            }
+            
+            foreach (var history in boardHistory.histories)
+            {
+                SetCellState(history.row, history.col, history.cellState, history.stoneAction);
+            }
+
+            _boardModel = boardHistory.postBoardModel;
+            _boardUndoHistoryModels.Push(boardHistory);
         }
 
         private void CheckGameState()

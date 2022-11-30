@@ -19,6 +19,7 @@ namespace App.Reversi
             _boardInputSubscriber.Subscribe(OnPutStone);
             _uiManager.resetButton.onClick.AddListener(OnReset);
             _uiManager.undoButton.onClick.AddListener(OnUndo);
+            _uiManager.redoButton.onClick.AddListener(OnRedo);
             _reversiService.ResetBoard();
         }
 
@@ -38,29 +39,42 @@ namespace App.Reversi
             }
         }
 
-        private void OnPutStone(BoardInputParams param)
+        private void UpdateBoard()
         {
-            _reversiService.PutStone(param.row, param.col);
             _uiManager.SetCurrentTurnText(_reversiService.currentTurnState);
             if (_reversiService.isGameOver)
             {
                 _uiManager.SetResultText(_reversiService.blackStoneCount, _reversiService.whiteStoneCount);
             }
+            else
+            {
+                _uiManager.UnsetResultText();
+            }
+        }
+
+        private void OnPutStone(BoardInputParams param)
+        {
+            _reversiService.PutStone(param.row, param.col);
+            UpdateBoard();
         }
 
         private void OnReset()
         {
-            _reversiBoard.ResetBoard();
             _reversiService.ResetBoard();
-            _uiManager.SetCurrentTurnText(_reversiService.currentTurnState);
-            _uiManager.UnsetResultText();
+            _reversiBoard.ResetBoard();
+            UpdateBoard();
         }
 
         private void OnUndo()
         {
             _reversiService.Undo();
-            _uiManager.SetCurrentTurnText(_reversiService.currentTurnState);
-            _uiManager.UnsetResultText();
+            UpdateBoard();
+        }
+
+        private void OnRedo()
+        {
+            _reversiService.Redo();
+            UpdateBoard();
         }
     }
 }

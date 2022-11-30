@@ -18,6 +18,8 @@ namespace App.Reversi
         public Button resetButton => _resetButton;
         [SerializeField] private Button _undoButton;
         public Button undoButton => _undoButton;
+        [SerializeField] private Button _redoButton;
+        public Button redoButton => _redoButton;
 
         void Start()
         {

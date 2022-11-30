@@ -4,14 +4,16 @@ namespace App.Reversi
 {
     public class BoardHistoryModel
     {
-        public BoardModel boardModel { get; }
-        public IReadOnlyList<CellStateHistoryModel> history => _history;
-        private CellStateHistoryModel[] _history;
+        public BoardModel prevBoardModel { get; }
+        public BoardModel postBoardModel { get; }
+        public IReadOnlyList<CellStateHistoryModel> histories => _histories;
+        private readonly CellStateHistoryModel[] _histories;
 
-        public BoardHistoryModel(BoardModel boardModel, CellStateHistoryModel[] history)
+        public BoardHistoryModel(BoardModel prevBoardModel, BoardModel postBoardModel, CellStateHistoryModel[] histories)
         {
-            this.boardModel = boardModel;
-            _history = history;
+            this.prevBoardModel = prevBoardModel;
+            this.postBoardModel = postBoardModel;
+            _histories = histories;
         }
     }
 }
