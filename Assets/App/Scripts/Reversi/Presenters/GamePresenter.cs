@@ -60,8 +60,8 @@ namespace App.Reversi
 
         private void OnReset()
         {
-            _reversiService.ResetBoard();
             _reversiBoard.ResetBoard();
+            _reversiService.ResetBoard();
             UpdateBoard();
         }
 
