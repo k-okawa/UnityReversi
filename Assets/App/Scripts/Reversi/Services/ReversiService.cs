@@ -35,7 +35,7 @@ namespace App.Reversi
 
             _boardUndoHistoryModels.Clear();
             _boardRedoHistoryModels.Clear();
-            _boardUndoHistoryModels.Push(new BoardHistoryModel(_boardModel.Clone(), _boardModel.Clone(),Array.Empty<CellStateHistoryModel>()));
+            _boardUndoHistoryModels.Push(new BoardHistoryModel( _boardModel.Clone(),Array.Empty<CellStateHistoryModel>()));
         }
 
         private void SetCellState(int row, int col, CellState cellState, StoneAction stoneAction)
@@ -65,7 +65,6 @@ namespace App.Reversi
             }
 
             List<CellStateHistoryModel> cellStateHistoryModels = new List<CellStateHistoryModel>();
-            var prevBoardModel = _boardModel.Clone();
 
             _boardModel.turnCount++;
             SetCellState(row, col, _boardModel.currentTurnState, StoneAction.Put);
@@ -84,7 +83,7 @@ namespace App.Reversi
 
             CheckGameState();
 
-            _boardUndoHistoryModels.Push(new BoardHistoryModel(prevBoardModel, _boardModel.Clone(), cellStateHistoryModels.ToArray()));
+            _boardUndoHistoryModels.Push(new BoardHistoryModel(_boardModel.Clone(), cellStateHistoryModels.ToArray()));
             _boardRedoHistoryModels.Clear();
         }
 
@@ -111,7 +110,7 @@ namespace App.Reversi
                 }
             }
 
-            _boardModel = boardHistory.prevBoardModel;
+            _boardModel = _boardUndoHistoryModels.Peek().postBoardModel;
             _boardRedoHistoryModels.Push(boardHistory);
         }
 
