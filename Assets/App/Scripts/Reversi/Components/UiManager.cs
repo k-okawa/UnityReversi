@@ -27,6 +27,13 @@ namespace App.Reversi
             _resultRoot.gameObject.SetActive(false);
         }
 
+        public void SetButtonEnable(bool isOn)
+        {
+            _resetButton.interactable = isOn;
+            _undoButton.interactable = isOn;
+            _redoButton.interactable = isOn;
+        }
+
         public void SetCurrentTurnText(CellState currentState)
         {
             switch (currentState)

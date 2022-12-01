@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace App.Reversi
@@ -21,25 +22,26 @@ namespace App.Reversi
         {
             foreach (var cell in _cells)
             {
-                cell.RemoveStone();
+                if(cell.stone == null) continue;
+                cell.stone.Set(CellState.None);
             }
         }
 
-        public void PutStone(int row, int col, CellState cellState)
+        public async UniTask PutStone(int row, int col, CellState cellState)
         {
             var cell = _cells[row, col];
-            cell.PutStone(cellState);
+            await cell.PutStone(cellState);
         }
         
-        public void RemoveStone(int row, int col)
+        public async UniTask RemoveStone(int row, int col)
         {
             var cell = _cells[row, col];
-            cell.RemoveStone();
+            await cell.RemoveStone();
         }
 
-        public void ReverseStone(int row, int col, CellState cellState)
+        public async UniTask ReverseStone(int row, int col, CellState cellState)
         {
-            _cells[row, col].stone.Set(cellState);
+            await _cells[row, col].stone.PlayReverseAnimation(cellState);
         }
     }
 }
