@@ -28,6 +28,7 @@ namespace App.Reversi
             _reversiService.ResetBoard();
             await PlayQueuedBoardAnimation(_reversiBoard.GetCancellationTokenOnDestroy());
             _uiManager.SetButtonEnable(true);
+            SetHint();
         }
 
         private Queue<CellStateParams> _cellStateQueue = new();
@@ -86,17 +87,28 @@ namespace App.Reversi
             }
         }
 
+        private void SetHint()
+        {
+            var hints = _reversiService.GetPossibleToPutPositions(_reversiService.currentTurnState);
+            foreach (var hint in hints)
+            {
+                _reversiBoard.SetHint(hint.row, hint.col);
+            }
+        }
+
         private async void OnPutStone(BoardInputParams param)
         {
             if (_cellStateQueue.Any() || _isPlayingAnimation)
             {
                 return;
             }
+            _reversiBoard.SetAllHintOff();
             _uiManager.SetButtonEnable(false);
             _reversiService.PutStone(param.row, param.col);
             await PlayQueuedBoardAnimation(_reversiBoard.GetCancellationTokenOnDestroy());
             UpdateUi();
             _uiManager.SetButtonEnable(true);
+            SetHint();
         }
 
         private async void OnReset()
@@ -107,24 +119,29 @@ namespace App.Reversi
             await PlayQueuedBoardAnimation(_reversiBoard.GetCancellationTokenOnDestroy());
             UpdateUi();
             _uiManager.SetButtonEnable(true);
+            SetHint();
         }
 
         private async void OnUndo()
         {
+            _reversiBoard.SetAllHintOff();
             _uiManager.SetButtonEnable(false);
             _reversiService.Undo();
             await PlayQueuedBoardAnimation(_reversiBoard.GetCancellationTokenOnDestroy());
             UpdateUi();
             _uiManager.SetButtonEnable(true);
+            SetHint();
         }
 
         private async void OnRedo()
         {
+            _reversiBoard.SetAllHintOff();
             _uiManager.SetButtonEnable(false);
             _reversiService.Redo();
             await PlayQueuedBoardAnimation(_reversiBoard.GetCancellationTokenOnDestroy());
             UpdateUi();
             _uiManager.SetButtonEnable(true);
+            SetHint();
         }
     }
 }

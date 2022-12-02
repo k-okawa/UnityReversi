@@ -6,6 +6,7 @@ namespace App.Reversi
     public class Cell : MonoBehaviour
     {
         [SerializeField] private GameObject _stonePrefab;
+        [SerializeField] private GameObject _hintCube;
 
         public int row { get; private set; }
         public int col { get; private set; }
@@ -35,6 +36,11 @@ namespace App.Reversi
             {
                 await stone.PlayRemoveAnimation();
             }
+        }
+
+        public void SetHint(bool isOn)
+        {
+            _hintCube.SetActive(isOn);
         }
     }
 }

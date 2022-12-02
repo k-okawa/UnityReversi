@@ -25,6 +25,7 @@ namespace App.Reversi
                 if(cell.stone == null) continue;
                 cell.stone.Set(CellState.None);
             }
+            SetAllHintOff();
         }
 
         public async UniTask PutStone(int row, int col, CellState cellState)
@@ -42,6 +43,19 @@ namespace App.Reversi
         public async UniTask ReverseStone(int row, int col, CellState cellState)
         {
             await _cells[row, col].stone.PlayReverseAnimation(cellState);
+        }
+
+        public void SetHint(int row, int col)
+        {
+            _cells[row, col].SetHint(true);
+        }
+
+        public void SetAllHintOff()
+        {
+            foreach (var cell in _cells)
+            {
+                cell.SetHint(false);
+            }
         }
     }
 }
