@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net7.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MagicOnion.Server" Version="4.4.1" />
+      <Compile Include="..\..\Assets\App\Scripts\Reversi\Shared\**\*.cs" LinkBase="LinkFromUnity" />
+    </ItemGroup>
+
+</Project>
