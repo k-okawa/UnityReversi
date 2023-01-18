@@ -33,6 +33,7 @@ MonoBehaviour:
     - com.cysharp.messagepipe
     - com.cysharp.messagepipe.vcontainer
     - com.cysharp.unitask
+    - com.neuecc.messagepack
     - com.neuecc.unirx
     - com.openupm
     - jp.hadashikick.vcontainer
@@ -44,6 +45,6 @@ MonoBehaviour:
   m_RegistryInfoDraft:
     m_Modified: 0
     m_ErrorMessage: 
-    m_UserModificationsInstanceId: -846
-    m_OriginalInstanceId: -848
+    m_UserModificationsInstanceId: -826
+    m_OriginalInstanceId: -830
   m_LoadAssets: 0

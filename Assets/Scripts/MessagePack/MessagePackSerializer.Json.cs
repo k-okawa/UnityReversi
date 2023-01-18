@@ -171,7 +171,7 @@ namespace MessagePack
                     }
 
                     scratchWriter.Flush();
-                    ToLZ4BinaryCore(scratchRental.Value, ref writer, options.Compression);
+                    ToLZ4BinaryCore(scratchRental.Value, ref writer, options.Compression, options.CompressionMinLength);
                 }
             }
             else
@@ -432,7 +432,7 @@ namespace MessagePack
                         }
                         else
                         {
-                            writer.Write("{\"$type\":\"" + typeNameTokenBuilder.ToString() + "}");
+                            writer.Write("{\"$type\":" + typeNameTokenBuilder.ToString() + "}");
                         }
                     }
 #endif

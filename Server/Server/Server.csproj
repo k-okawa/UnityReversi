@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="MagicOnion.Server" Version="4.4.1" />
+      <PackageReference Include="MagicOnion.Server" Version="5.0.2" />
       <Compile Include="..\..\Assets\App\Scripts\Reversi\Shared\**\*.cs" LinkBase="LinkFromUnity" />
     </ItemGroup>
 

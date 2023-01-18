@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "com.cysharp.messagepipe": "1.7.4",
+    "com.cysharp.messagepipe.vcontainer": "1.7.4",
     "com.cysharp.unitask": "2.3.3",
     "com.neuecc.unirx": "7.1.0",
     "com.unity.collab-proxy": "1.17.6",
@@ -45,8 +46,7 @@
     "com.unity.modules.video": "1.0.0",
     "com.unity.modules.vr": "1.0.0",
     "com.unity.modules.wind": "1.0.0",
-    "com.unity.modules.xr": "1.0.0",
-    "com.cysharp.messagepipe.vcontainer": "1.7.4"
+    "com.unity.modules.xr": "1.0.0"
   },
   "scopedRegistries": [
     {
@@ -56,6 +56,7 @@
         "com.cysharp.messagepipe",
         "com.cysharp.messagepipe.vcontainer",
         "com.cysharp.unitask",
+        "com.neuecc.messagepack",
         "com.neuecc.unirx",
         "com.openupm",
         "jp.hadashikick.vcontainer"
